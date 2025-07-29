@@ -1,4 +1,4 @@
-package com.dontgojunbao.bossoverhere.domain.jwt;
+package com.dontgojunbao.bossoverhere.domain.auth.jwt;
 
 
 import com.dontgojunbao.bossoverhere.global.error.AuthErrorCode;

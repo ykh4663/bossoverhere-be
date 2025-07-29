@@ -1,4 +1,4 @@
-package com.dontgojunbao.bossoverhere.domain.jwt;
+package com.dontgojunbao.bossoverhere.domain.auth.jwt;
 
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Value;
