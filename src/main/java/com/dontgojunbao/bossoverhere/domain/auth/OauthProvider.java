@@ -1,6 +1,8 @@
 package com.dontgojunbao.bossoverhere.domain.auth;
 
 
+import com.dontgojunbao.bossoverhere.domain.auth.domain.enums.OauthType;
+
 public interface OauthProvider {
     OauthType getOauthType();
     OauthClient getOAuthClient();
