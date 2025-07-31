@@ -4,30 +4,31 @@ on:
   pull_request:
     branches: [ "dev" ]
 
-permissions:
-  checks: write
-  pull-requests: write
-
 jobs:
   test:
-    env:
-      SPRING_PROFILES_ACTIVE: test
-      JWT_SECRET: ${{ secrets.JWT_SECRET }}
-      AI_SERVER_URL: ${{ secrets.AI_SERVER_URL }}
-      KAKAO_USERINFO_URI: ${{ secrets.KAKAO_USERINFO_URI }}
-
     runs-on: ubuntu-latest
+
+    env:
+      SPRING_PROFILES_ACTIVE: dev
 
     steps:
       - uses: actions/checkout@v4
+
+      - name: Write application-dev.yml from Secret
+        run: |
+          mkdir -p src/main/resources
+          cat << 'EOF' > src/main/resources/application-dev.yml
+          ${{ secrets.APPLICATION_DEV_YML }}
+          EOF
+
       - name: JDK 17 setting
         uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'corretto'
 
-      - name: Gradle Caching
-        uses: actions/cache@v3
+      - name: Cache Gradle packages
+        uses: actions/cache@v2
         with:
           path: |
             ~/.gradle/caches
@@ -36,19 +37,12 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
-
-
       - name: Grant Execute Permission For Gradlew
         run: chmod +x gradlew
 
-
-
       - name: Test with Gradle
-        run: |
-          # JVM 프로퍼티를 태스크 앞쪽에 두기
-          ./gradlew --info \
-            -Dspring.jpa.defer-datasource-initialization=true \
-            test
+        run: ./gradlew --info test
+
       - name: 테스트 결과 Report
         uses: EnricoMi/publish-unit-test-result-action@v2
         if: always()
@@ -62,8 +56,6 @@ jobs:
           report_paths: 'build/test-results/test/TEST-*.xml'
 
       - name: Cleanup Gradle Cache
-        # Remove some files from the Gradle cache, so they aren't cached by GitHub Actions.
-        # Restoring these files from a GitHub Actions cache might cause problems for future builds.
         run: |
           rm -f ~/.gradle/caches/modules-2/modules-2.lock
           rm -f ~/.gradle/caches/modules-2/gc.properties
