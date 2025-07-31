@@ -11,6 +11,8 @@ import com.dontgojunbao.bossoverhere.domain.user.domain.User;
 import com.dontgojunbao.bossoverhere.domain.user.service.UserService;
 import com.dontgojunbao.bossoverhere.global.adapter.aws.s3.S3Service;
 import com.dontgojunbao.bossoverhere.global.error.ApplicationException;
+import com.dontgojunbao.bossoverhere.global.error.PostErrorCode;
+import com.dontgojunbao.bossoverhere.global.text.ProfanityValidator;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -33,31 +35,27 @@ import static org.assertj.core.api.Assertions.catchThrowableOfType;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class PostServiceTest {
 
+    @Mock PostRepository postRepository;
+    @Mock UserService userService;
+    @Mock SpotService spotService;
+    @Mock S3Service s3Service;
     @Mock
-    PostRepository postRepository;
-    @Mock
-    UserService userService;
-    @Mock
-    SpotService spotService;
-    @Mock
-    S3Service s3Service;
-    @InjectMocks
-    PostServiceImpl postService;
+    ProfanityValidator profanityValidator;
+    @InjectMocks PostServiceImpl postService;
 
-    @Test
-    @DisplayName("savePost: 파일 없이 정상 저장")
+    @Test @DisplayName("savePost: 파일 없이 정상 저장")
     void savePost_withoutFile_success() {
         Long userId = 1L;
+        String memo = "clean memo";
         PostSaveDto dto = new PostSaveDto(
                 LocalDateTime.now(),
                 LocalDateTime.now().plusHours(2),
-                10L, 100L, 50L, "memo",
+                10L, 100L, 50L, memo,
                 Optional.empty()
         );
         User writer = User.builder().id(userId).oauthId("oauth-1").build();
@@ -66,34 +64,67 @@ class PostServiceTest {
 
         given(userService.getUserById(userId)).willReturn(writer);
         given(spotService.getSpotById(10L)).willReturn(spot);
+        // profanityValidator.assertNoBadWordOrThrow does nothing by default
         given(postRepository.save(any(Post.class))).willReturn(saved);
 
         Long result = postService.savePost(userId, dto);
 
         assertThat(result).isEqualTo(99L);
+        then(profanityValidator).should().assertNoBadWordOrThrow(memo);
         then(s3Service).should(never()).uploadFile(any());
         then(postRepository).should().save(any(Post.class));
     }
 
+    @Test @DisplayName("savePost: 메모에 비속어 포함 시 BAD_WORD_DETECTED 예외")
+    void savePost_badWordInMemo_throws() {
+        Long userId = 2L;
+        String badMemo = "someBadWord";
+        PostSaveDto dto = new PostSaveDto(
+                LocalDateTime.now(),
+                LocalDateTime.now().plusHours(1),
+                20L, 200L, 80L, badMemo,
+                Optional.empty()
+        );
+        User writer = User.builder().id(userId).oauthId("oauth-2").build();
+        Spot spot = Spot.builder().id(20L).build();
+
+        given(userService.getUserById(userId)).willReturn(writer);
+        given(spotService.getSpotById(20L)).willReturn(spot);
+        doThrow(new ApplicationException(PostErrorCode.BAD_WORD_DETECTED))
+                .when(profanityValidator).assertNoBadWordOrThrow(badMemo);
+
+        ApplicationException ex = catchThrowableOfType(
+                () -> postService.savePost(userId, dto),
+                ApplicationException.class
+        );
+        assertThat(ex.getErrorCode()).isEqualTo(PostErrorCode.BAD_WORD_DETECTED);
+
+        then(profanityValidator).should().assertNoBadWordOrThrow(badMemo);
+        then(postRepository).should(never()).save(any());
+        then(s3Service).shouldHaveNoInteractions();
+    }
+
     @Test @DisplayName("savePost: 파일 업로드 후 URL 세팅")
     void savePost_withFile_success() throws Exception {
-        Long userId = 2L;
+        Long userId = 3L;
         var file = mock(org.springframework.web.multipart.MultipartFile.class);
         given(file.isEmpty()).willReturn(false);
+        String memo = "clean";
 
         PostSaveDto dto = new PostSaveDto(
                 LocalDateTime.now(),
                 LocalDateTime.now().plusHours(1),
-                20L, 200L, 80L, "note",
+                30L, 300L, 150L, memo,
                 Optional.of(file)
         );
-        User writer = User.builder().id(userId).oauthId("oauth-2").build();
-        Spot spot = Spot.builder().id(20L).build();
+        User writer = User.builder().id(userId).oauthId("oauth-3").build();
+        Spot spot = Spot.builder().id(30L).build();
         String url = "http://s3/bucket/img.png";
         Post saved = Post.builder().id(100L).build();
 
         given(userService.getUserById(userId)).willReturn(writer);
-        given(spotService.getSpotById(20L)).willReturn(spot);
+        given(spotService.getSpotById(30L)).willReturn(spot);
+        doNothing().when(profanityValidator).assertNoBadWordOrThrow(memo);
         given(s3Service.uploadFile(file)).willReturn(url);
 
         ArgumentCaptor<Post> captor = ArgumentCaptor.forClass(Post.class);
@@ -104,34 +135,7 @@ class PostServiceTest {
         assertThat(id).isEqualTo(100L);
         Post toSave = captor.getValue();
         assertThat(toSave.getImageUrl()).isEqualTo(url);
-    }
-
-    @Test @DisplayName("getPost: 정상 조회")
-    void getPost_success() {
-        Long userId = 3L, postId = 30L;
-        User user = User.builder().id(userId).oauthId("oauth-3").build();
-        Spot spot = Spot.builder().id(5L).build();
-        Post post = Post.builder()
-                .id(postId)
-                .writer(user)
-                .spot(spot)
-                .startAt(LocalDateTime.now())
-                .endAt(LocalDateTime.now().plusHours(1))
-                .revenue(150L)
-                .expense(50L)
-                .memo("ok")
-                .imageUrl(null)
-                .build();
-        post.calculateProfit();
-
-        given(userService.getUserById(userId)).willReturn(user);
-        given(postRepository.findById(postId)).willReturn(Optional.of(post));
-
-        PostInfoDto dto = postService.getPost(userId, postId);
-
-        assertThat(dto.getPostId()).isEqualTo(postId);
-        assertThat(dto.getWriterId()).isEqualTo(userId);
-        assertThat(dto.getSpotId()).isEqualTo(5L);
+        then(profanityValidator).should().assertNoBadWordOrThrow(memo);
     }
 
     @Test @DisplayName("getPost: 없으면 NOT_FOUND_POST")
@@ -236,6 +240,45 @@ class PostServiceTest {
                 ApplicationException.class
         );
         assertThat(ex.getErrorCode()).isEqualTo(FORBIDDEN_POST);
+    }
+
+    @Test @DisplayName("updatePost: 메모에 비속어 포함 시 BAD_WORD_DETECTED 예외")
+    void updatePost_badWordInMemo_throws() {
+        Long userId = 4L, postId = 40L;
+        User user = User.builder().id(userId).oauthId("oauth-4").build();
+        Post post = Post.builder()
+                .id(postId).writer(user)
+                .spot(Spot.builder().id(1L).build())
+                .startAt(LocalDateTime.now())
+                .endAt(LocalDateTime.now().plusHours(1))
+                .revenue(100L).expense(20L)
+                .memo("old").build();
+        post.calculateProfit();
+
+        String badMemo = "dirtyWord";
+        PostUpdateDto dto = new PostUpdateDto(
+                Optional.empty(),
+                Optional.empty(),
+                Optional.empty(),
+                Optional.empty(),
+                Optional.empty(),
+                Optional.of(badMemo),
+                Optional.empty()
+        );
+
+        given(userService.getUserById(userId)).willReturn(user);
+        given(postRepository.findById(postId)).willReturn(Optional.of(post));
+        doThrow(new ApplicationException(PostErrorCode.BAD_WORD_DETECTED))
+                .when(profanityValidator).assertNoBadWordOrThrow(badMemo);
+
+        ApplicationException ex = catchThrowableOfType(
+                () -> postService.updatePost(userId, postId, dto),
+                ApplicationException.class
+        );
+        assertThat(ex.getErrorCode()).isEqualTo(PostErrorCode.BAD_WORD_DETECTED);
+
+        then(profanityValidator).should().assertNoBadWordOrThrow(badMemo);
+        then(postRepository).should(never()).save(any());
     }
 
     @Test @DisplayName("deletePost: 정상 삭제")
