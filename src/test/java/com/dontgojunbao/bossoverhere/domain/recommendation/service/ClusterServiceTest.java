@@ -4,7 +4,7 @@ package com.dontgojunbao.bossoverhere.domain.recommendation.service;
 import com.dontgojunbao.bossoverhere.domain.recommendation.dao.ClusterRepository;
 import com.dontgojunbao.bossoverhere.domain.recommendation.domain.Cluster;
 import com.dontgojunbao.bossoverhere.domain.recommendation.dto.response.ClusterDetailResponse;
-import com.dontgojunbao.bossoverhere.domain.recommendation.dto.response.ClusterSimpleResponse;
+import com.dontgojunbao.bossoverhere.domain.recommendation.dto.response.ClusterDto;
 import com.dontgojunbao.bossoverhere.domain.user.domain.User;
 import com.dontgojunbao.bossoverhere.domain.user.service.UserService;
 import com.dontgojunbao.bossoverhere.global.error.ApplicationException;
@@ -56,7 +56,7 @@ class ClusterServiceTest {
         given(clusterRepo.findAll()).willReturn(List.of(c1, c2));
 
         // when
-        List<ClusterSimpleResponse> result = clusterService.findAll(userId);
+        List<ClusterDto> result = clusterService.findAll(userId);
 
         // then
         assertThat(result).hasSize(2);

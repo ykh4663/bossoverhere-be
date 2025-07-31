@@ -1,7 +1,7 @@
 package com.dontgojunbao.bossoverhere.domain.recommendation.controller;
 
 import com.dontgojunbao.bossoverhere.domain.recommendation.dto.response.FoodCategoryDetailResponse;
-import com.dontgojunbao.bossoverhere.domain.recommendation.dto.response.FoodCategorySimpleResponse;
+import com.dontgojunbao.bossoverhere.domain.recommendation.dto.response.FoodCategoryDto;
 import com.dontgojunbao.bossoverhere.domain.recommendation.service.FoodCategoryService;
 import com.dontgojunbao.bossoverhere.global.common.dto.CommonResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -25,10 +25,10 @@ public class FoodCategoryController {
 
     @Operation(summary = "모든 음식 조회", description = "음식 내역과 연관 클러스터 리스트 조회")
     @GetMapping
-    public ResponseEntity<CommonResponse<List<FoodCategorySimpleResponse>>> getFoodCategories(
+    public ResponseEntity<CommonResponse<List<FoodCategoryDto>>> getFoodCategories(
             @AuthenticationPrincipal Long userId
     ) {
-        List<FoodCategorySimpleResponse> foods = foodCategoryService.findAll(userId);
+        List<FoodCategoryDto> foods = foodCategoryService.findAll(userId);
         return ResponseEntity.ok(CommonResponse.createSuccess(foods));
     }
     @Operation(summary = "음식 상세 조회", description = "ID로 단건 조회")

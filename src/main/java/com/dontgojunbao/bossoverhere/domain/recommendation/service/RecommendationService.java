@@ -5,7 +5,7 @@ import com.dontgojunbao.bossoverhere.domain.ai.AiClient;
 import com.dontgojunbao.bossoverhere.domain.ai.dto.AiPlanResponse;
 
 import com.dontgojunbao.bossoverhere.domain.recommendation.dto.request.RecommendationRequestDto;
-import com.dontgojunbao.bossoverhere.domain.recommendation.dto.response.RecommendationSegmentDto;
+import com.dontgojunbao.bossoverhere.domain.recommendation.dto.response.RecommendationResponse;
 import com.dontgojunbao.bossoverhere.domain.spot.dao.SpotRepository;
 
 import com.dontgojunbao.bossoverhere.domain.spot.dto.SpotDto;
@@ -32,7 +32,7 @@ public class RecommendationService {
     private final SpotRepository spotRepository;
 
 
-    public List<RecommendationSegmentDto> recommend(Long userId, RecommendationRequestDto reqDto) {
+    public List<RecommendationResponse> recommend(Long userId, RecommendationRequestDto reqDto) {
         userService.getUserById(userId);
         List<AiPlanResponse> aiPlans = aiClient.callAiForPlan(reqDto);
 
@@ -46,7 +46,7 @@ public class RecommendationService {
                             .map(SpotDto::from)
                             .orElseThrow(() -> new ApplicationException(NOTFOUND_SPOT));
 
-                    return new RecommendationSegmentDto(plan.getTime(), from, to);
+                    return new RecommendationResponse(plan.getTime(), from, to);
                 })
                 .collect(Collectors.toList());
     }

@@ -3,7 +3,7 @@ package com.dontgojunbao.bossoverhere.domain.recommendation.service;
 import com.dontgojunbao.bossoverhere.domain.ai.AiClient;
 import com.dontgojunbao.bossoverhere.domain.ai.dto.AiPlanResponse;
 import com.dontgojunbao.bossoverhere.domain.recommendation.dto.request.RecommendationRequestDto;
-import com.dontgojunbao.bossoverhere.domain.recommendation.dto.response.RecommendationSegmentDto;
+import com.dontgojunbao.bossoverhere.domain.recommendation.dto.response.RecommendationResponse;
 import com.dontgojunbao.bossoverhere.domain.spot.dao.SpotRepository;
 import com.dontgojunbao.bossoverhere.domain.spot.domain.Spot;
 
@@ -105,17 +105,17 @@ class RecommendationServiceTest {
                                 .build()
                 ));
         // when
-        List<RecommendationSegmentDto> result = recommendationService.recommend(userId, dto);
+        List<RecommendationResponse> result = recommendationService.recommend(userId, dto);
 
         // then
         assertThat(result).hasSize(2);
 
-        RecommendationSegmentDto r1 = result.get(0);
+        RecommendationResponse r1 = result.get(0);
         assertThat(r1.getTime()).isEqualTo("09:00");
         assertThat(r1.getFrom().getSpotId()).isEqualTo(10L);
         assertThat(r1.getTo().getSpotId()).isEqualTo(20L);
 
-        RecommendationSegmentDto r2 = result.get(1);
+        RecommendationResponse r2 = result.get(1);
         assertThat(r2.getTime()).isEqualTo("12:00");
         assertThat(r2.getFrom().getSpotId()).isEqualTo(20L);
         assertThat(r2.getTo().getSpotId()).isEqualTo(30L);

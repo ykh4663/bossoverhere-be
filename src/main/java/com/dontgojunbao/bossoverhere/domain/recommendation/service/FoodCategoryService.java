@@ -4,10 +4,9 @@ import com.dontgojunbao.bossoverhere.domain.recommendation.dao.FoodCategoryClust
 import com.dontgojunbao.bossoverhere.domain.recommendation.dao.FoodCategoryRepository;
 import com.dontgojunbao.bossoverhere.domain.recommendation.domain.FoodCategory;
 import com.dontgojunbao.bossoverhere.domain.recommendation.dto.response.FoodCategoryDetailResponse;
-import com.dontgojunbao.bossoverhere.domain.recommendation.dto.response.FoodCategorySimpleResponse;
+import com.dontgojunbao.bossoverhere.domain.recommendation.dto.response.FoodCategoryDto;
 import com.dontgojunbao.bossoverhere.domain.user.service.UserService;
 import com.dontgojunbao.bossoverhere.global.error.ApplicationException;
-import com.dontgojunbao.bossoverhere.global.error.FoodCategoryErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,12 +23,12 @@ public class FoodCategoryService {
     private final FoodCategoryRepository categoryRepo;
     private final FoodCategoryClusterRepository mappingRepo;
 
-    public List<FoodCategorySimpleResponse> findAll(Long userId) {
+    public List<FoodCategoryDto> findAll(Long userId) {
         userService.getUserById(userId);
         List<FoodCategory> cats = categoryRepo.findAll();
         return cats.stream().map(cat -> {
             List<Long> clusterIds = mappingRepo.findClusterIdsByCategoryId(cat.getId());
-            return new FoodCategorySimpleResponse(cat.getId(), cat.getName(), clusterIds);
+            return new FoodCategoryDto(cat.getId(), cat.getName(), clusterIds);
         }).toList();
     }
 

@@ -1,7 +1,7 @@
 package com.dontgojunbao.bossoverhere.domain.recommendation.controller;
 
 import com.dontgojunbao.bossoverhere.domain.recommendation.dto.request.RecommendationRequestDto;
-import com.dontgojunbao.bossoverhere.domain.recommendation.dto.response.RecommendationSegmentDto;
+import com.dontgojunbao.bossoverhere.domain.recommendation.dto.response.RecommendationResponse;
 import com.dontgojunbao.bossoverhere.domain.recommendation.service.RecommendationService;
 import com.dontgojunbao.bossoverhere.global.common.dto.CommonResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -29,11 +29,11 @@ public class RecommendationController {
             description = "문항, 스팟, 날짜·시간을 전달하면 AI 추천 플랜 리스트를 반환합니다."
     )
     @PostMapping
-    public ResponseEntity<CommonResponse<List<RecommendationSegmentDto>>> recommend(
+    public ResponseEntity<CommonResponse<List<RecommendationResponse>>> recommend(
             @RequestBody @Valid RecommendationRequestDto dto,
             @AuthenticationPrincipal Long userId
     ) {
-        List<RecommendationSegmentDto> plan = recommendationService.recommend(userId, dto);
+        List<RecommendationResponse> plan = recommendationService.recommend(userId, dto);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(CommonResponse.createSuccess(plan));

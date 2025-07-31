@@ -3,7 +3,7 @@ package com.dontgojunbao.bossoverhere.domain.recommendation.service;
 import com.dontgojunbao.bossoverhere.domain.recommendation.dao.ClusterRepository;
 import com.dontgojunbao.bossoverhere.domain.recommendation.domain.Cluster;
 import com.dontgojunbao.bossoverhere.domain.recommendation.dto.response.ClusterDetailResponse;
-import com.dontgojunbao.bossoverhere.domain.recommendation.dto.response.ClusterSimpleResponse;
+import com.dontgojunbao.bossoverhere.domain.recommendation.dto.response.ClusterDto;
 import com.dontgojunbao.bossoverhere.domain.user.service.UserService;
 import com.dontgojunbao.bossoverhere.global.error.ApplicationException;
 
@@ -22,10 +22,10 @@ public class ClusterService {
     private final UserService userService;
     private final ClusterRepository clusterRepo;
 
-    public List<ClusterSimpleResponse> findAll(Long userId) {
+    public List<ClusterDto> findAll(Long userId) {
         userService.getUserById(userId);
         return clusterRepo.findAll().stream()
-                .map(c -> new ClusterSimpleResponse(c.getId(), c.getTitle(), c.getNickname()))
+                .map(c -> new ClusterDto(c.getId(), c.getTitle(), c.getNickname()))
                 .toList();
     }
     public ClusterDetailResponse findById(Long userId, Long clusterId) {

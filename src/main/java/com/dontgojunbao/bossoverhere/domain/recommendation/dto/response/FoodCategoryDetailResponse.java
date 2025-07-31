@@ -1,5 +1,6 @@
 package com.dontgojunbao.bossoverhere.domain.recommendation.dto.response;
 
+import com.dontgojunbao.bossoverhere.domain.recommendation.domain.FoodCategory;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -17,7 +18,12 @@ public class FoodCategoryDetailResponse {
 
     @Schema(description = "카테고리 설명", example = "덮밥류, 제육, 불고기 등")
     private String description;
+    public static FoodCategoryDetailResponse from(FoodCategory cat) {
+        return new FoodCategoryDetailResponse(
+                cat.getId(),
+                cat.getName(),
+                cat.getDescription()
+        );
+    }
 
-    @Schema(description = "이 카테고리에 매핑된 클러스터 ID 리스트", example = "[0,1,2,5]")
-    private List<Long> clusterIds;
 }

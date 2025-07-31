@@ -4,7 +4,7 @@ import com.dontgojunbao.bossoverhere.domain.recommendation.dao.FoodCategoryClust
 import com.dontgojunbao.bossoverhere.domain.recommendation.dao.FoodCategoryRepository;
 import com.dontgojunbao.bossoverhere.domain.recommendation.domain.FoodCategory;
 import com.dontgojunbao.bossoverhere.domain.recommendation.dto.response.FoodCategoryDetailResponse;
-import com.dontgojunbao.bossoverhere.domain.recommendation.dto.response.FoodCategorySimpleResponse;
+import com.dontgojunbao.bossoverhere.domain.recommendation.dto.response.FoodCategoryDto;
 import com.dontgojunbao.bossoverhere.domain.user.domain.User;
 import com.dontgojunbao.bossoverhere.domain.user.service.UserService;
 import com.dontgojunbao.bossoverhere.global.error.ApplicationException;
@@ -62,17 +62,17 @@ class FoodCategoryServiceTest {
         given(mappingRepo.findClusterIdsByCategoryId(200L)).willReturn(List.of(2L, 3L));
 
         // when
-        List<FoodCategorySimpleResponse> result = foodCategoryService.findAll(userId);
+        List<FoodCategoryDto> result = foodCategoryService.findAll(userId);
 
         // then
         assertThat(result).hasSize(2);
 
-        FoodCategorySimpleResponse r1 = result.get(0);
+        FoodCategoryDto r1 = result.get(0);
         assertThat(r1.getId()).isEqualTo(100L);
         assertThat(r1.getName()).isEqualTo("분식");
         assertThat(r1.getClusterIds()).containsExactly(1L, 2L);
 
-        FoodCategorySimpleResponse r2 = result.get(1);
+        FoodCategoryDto r2 = result.get(1);
         assertThat(r2.getId()).isEqualTo(200L);
         assertThat(r2.getName()).isEqualTo("한식");
         assertThat(r2.getClusterIds()).containsExactly(2L, 3L);

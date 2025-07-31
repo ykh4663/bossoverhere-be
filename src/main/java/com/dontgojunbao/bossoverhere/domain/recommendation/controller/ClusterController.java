@@ -1,7 +1,7 @@
 package com.dontgojunbao.bossoverhere.domain.recommendation.controller;
 
 import com.dontgojunbao.bossoverhere.domain.recommendation.dto.response.ClusterDetailResponse;
-import com.dontgojunbao.bossoverhere.domain.recommendation.dto.response.ClusterSimpleResponse;
+import com.dontgojunbao.bossoverhere.domain.recommendation.dto.response.ClusterDto;
 import com.dontgojunbao.bossoverhere.domain.recommendation.service.ClusterService;
 import com.dontgojunbao.bossoverhere.global.common.dto.CommonResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -25,10 +25,10 @@ public class ClusterController {
 
     @Operation(summary = "전체 클러스터 조회", description = "클러스터 리스트 조회")
     @GetMapping
-    public ResponseEntity<CommonResponse<List<ClusterSimpleResponse>>> getClusters(
+    public ResponseEntity<CommonResponse<List<ClusterDto>>> getClusters(
             @AuthenticationPrincipal Long userId
     ) {
-        List<ClusterSimpleResponse> clusters = clusterService.findAll(userId);
+        List<ClusterDto> clusters = clusterService.findAll(userId);
         return ResponseEntity.ok(CommonResponse.createSuccess(clusters));
     }
 
