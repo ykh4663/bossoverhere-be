@@ -11,4 +11,6 @@ import java.util.List;
 public interface FoodCategoryClusterRepository extends JpaRepository<FoodCategoryCluster, Long> {
     @Query("select fcc.cluster.id from FoodCategoryCluster fcc where fcc.foodCategory.id = :categoryId")
     List<Long> findClusterIdsByCategoryId(@Param("categoryId") Long categoryId);
+
+    List<FoodCategoryCluster> findAllByFoodCategory_Id(Long foodCategoryId);
 }

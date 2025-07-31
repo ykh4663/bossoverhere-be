@@ -1,5 +1,6 @@
 package com.dontgojunbao.bossoverhere.domain.recommendation.dto.response;
 
+import com.dontgojunbao.bossoverhere.domain.recommendation.domain.Cluster;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -17,4 +18,13 @@ public class ClusterDetailResponse {
     private String description;
     @Schema(description = "어울리는 방문 상황", example = "출퇴근 후 산책, 운동, 친구와의 약속")
     private String situations;
+    public static ClusterDetailResponse from(Cluster c) {
+        return new ClusterDetailResponse(
+                c.getId(),
+                c.getTitle(),
+                c.getNickname(),
+                c.getDescription(),
+                c.getSituations()
+        );
+    }
 }
