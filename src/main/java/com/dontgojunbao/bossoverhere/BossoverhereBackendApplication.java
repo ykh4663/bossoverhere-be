@@ -10,7 +10,6 @@ public class BossoverhereBackendApplication {
 	public static void main(String[] args) {
 		System.setProperty("aws.java.v1.disableDeprecationAnnouncement", "true");
 		SpringApplication.run(BossoverhereBackendApplication.class, args);
-
 	}
 
 }
