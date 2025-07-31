@@ -61,7 +61,6 @@ jobs:
           # 이미지 태그 지정
           tags: ${{ secrets.DOCKER_REPO }}:latest
 
-
       # SSH를 사용하여 EC2에 명령을 전달
       - name: Deploy to Server
         uses: appleboy/ssh-action@master
