@@ -27,6 +27,7 @@ INSERT INTO food_category (food_category_id, name, description) VALUES
   (8, '일식', '카레, 초밥, 회, 우동, 타코야끼 등'),
   (9, '멕시칸', '타코, 브리또, 퀘사디아 등');
 
+
 -- 3) FoodCategoryCluster 매핑 (cluster_id, food_category_id 모두 +1)
 INSERT INTO food_category_cluster (cluster_id, food_category_id) VALUES
   (1,1),(3,1),(4,1),(6,1),
