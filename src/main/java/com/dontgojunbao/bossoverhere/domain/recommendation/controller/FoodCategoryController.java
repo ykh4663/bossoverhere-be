@@ -1,5 +1,6 @@
 package com.dontgojunbao.bossoverhere.domain.recommendation.controller;
 
+import com.dontgojunbao.bossoverhere.domain.recommendation.dto.response.ClusterDetailResponse;
 import com.dontgojunbao.bossoverhere.domain.recommendation.dto.response.FoodCategoryDetailResponse;
 import com.dontgojunbao.bossoverhere.domain.recommendation.dto.response.FoodCategoryDto;
 import com.dontgojunbao.bossoverhere.domain.recommendation.service.FoodCategoryService;
@@ -23,23 +24,26 @@ import java.util.List;
 public class FoodCategoryController {
     private final FoodCategoryService foodCategoryService;
 
-    @Operation(summary = "모든 음식 조회", description = "음식 내역과 연관 클러스터 리스트 조회")
+    @Operation(summary = "모든 음식 카테고리 + 클러스터 ID 조회")
     @GetMapping
-    public ResponseEntity<CommonResponse<List<FoodCategoryDto>>> getFoodCategories(
+    public ResponseEntity<CommonResponse<List<FoodCategoryDetailResponse>>> getFoodCategories(
             @AuthenticationPrincipal Long userId
     ) {
-        List<FoodCategoryDto> foods = foodCategoryService.findAll(userId);
-        return ResponseEntity.ok(CommonResponse.createSuccess(foods));
+        return ResponseEntity.ok(
+                CommonResponse.createSuccess(foodCategoryService.findAll(userId))
+        );
     }
-    @Operation(summary = "음식 상세 조회", description = "ID로 단건 조회")
-    @GetMapping("/{categoryId}")
-    public ResponseEntity<CommonResponse<FoodCategoryDetailResponse>> getFoodCategory(
+
+    @Operation(summary = "카테고리별 클러스터 조회")
+    @GetMapping("/{categoryId}/clusters")
+    public ResponseEntity<CommonResponse<List<ClusterDetailResponse>>> getClustersByCategory(
             @AuthenticationPrincipal Long userId,
             @PathVariable Long categoryId
     ) {
         return ResponseEntity.ok(
-                CommonResponse.createSuccess(foodCategoryService.findById(userId, categoryId))
+                CommonResponse.createSuccess(
+                        foodCategoryService.findClustersByCategory(userId, categoryId)
+                )
         );
     }
-
 }
