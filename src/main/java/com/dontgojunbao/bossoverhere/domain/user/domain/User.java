@@ -12,7 +12,7 @@ import java.util.List;
 
 import static jakarta.persistence.CascadeType.ALL;
 
-@Table(name = "USERS")
+@Table(name = "users")
 @Entity
 @Getter
 @NoArgsConstructor

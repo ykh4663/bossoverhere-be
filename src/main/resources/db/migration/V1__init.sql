@@ -45,20 +45,20 @@ CREATE TABLE IF NOT EXISTS spot (
     created_at  TIMESTAMP    DEFAULT CURRENT_TIMESTAMP,
     updated_at  TIMESTAMP    DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
     );
--- USERS 테이블
+-- users 테이블
 
-CREATE TABLE IF NOT EXISTS USERS (
-                                     user_id     BIGINT      AUTO_INCREMENT PRIMARY KEY,
-                                     OAUTH_ID    VARCHAR(255) NOT NULL,
-    created_at  TIMESTAMP    DEFAULT CURRENT_TIMESTAMP,
-    updated_at  TIMESTAMP    DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+CREATE TABLE IF NOT EXISTS users (
+                                     user_id     BIGINT AUTO_INCREMENT PRIMARY KEY,
+                                     oauth_id    VARCHAR(255) NOT NULL,
+    created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
     );
 -- RefreshToken 테이블
 CREATE TABLE IF NOT EXISTS refresh_token (
                                              user_id BIGINT PRIMARY KEY,
                                              token   VARCHAR(512) NOT NULL,
     FOREIGN KEY (user_id)
-    REFERENCES USERS(user_id)
+    REFERENCES users(user_id)
     ON DELETE CASCADE
     );
 
@@ -76,7 +76,7 @@ CREATE TABLE IF NOT EXISTS recommendation_request (
 
                                                       CONSTRAINT fk_rr_user
                                                       FOREIGN KEY (user_id)
-    REFERENCES USERS(user_id)
+    REFERENCES users(user_id)
     ON DELETE CASCADE,
 
     CONSTRAINT fk_rr_food_category
@@ -149,7 +149,7 @@ CREATE TABLE IF NOT EXISTS post (
     created_at  TIMESTAMP      DEFAULT CURRENT_TIMESTAMP,
     updated_at  TIMESTAMP      DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
-    CONSTRAINT fk_post_user FOREIGN KEY (user_id) REFERENCES USERS(user_id) ON DELETE CASCADE,
+    CONSTRAINT fk_post_user FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
     CONSTRAINT fk_post_spot FOREIGN KEY (spot_id) REFERENCES spot(spot_id) ON DELETE CASCADE,
 
     INDEX idx_post_user (user_id),
