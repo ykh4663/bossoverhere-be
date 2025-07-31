@@ -1,5 +1,5 @@
 -- 1) Cluster 마스터 데이터 (ID 곧바로 명시)
-INSERT IGNORE INTO cluster (cluster_id, title, nickname, description, situations) VALUES
+INSERT INTO cluster (cluster_id, title, nickname, description, situations) VALUES
   (1, '동네 일상과 젊음의 중심', '활력 가득한 생활권 거점',
      '10–30대 비율이 높고 평일 방문자 수가 많은 지역', '출퇴근 후 산책, 운동, 친구와의 약속'),
   (2, '고요한 휴식의 쉼터', '실버 세대의 안식처',
@@ -16,7 +16,7 @@ INSERT IGNORE INTO cluster (cluster_id, title, nickname, description, situations
      '짧은 시간 체류하고 외부인이 많이 찾는 대표 관광지', '관광 코스 중 경유');
 
 -- 2) FoodCategory 마스터 데이터
-INSERT IGNORE INTO food_category (food_category_id, name, description) VALUES
+INSERT INTO food_category (food_category_id, name, description) VALUES
   (1, '분식', NULL),
   (2, '한식', '덮밥류, 제육, 불고기 등'),
   (3, '샌드/버거', NULL),
@@ -28,7 +28,7 @@ INSERT IGNORE INTO food_category (food_category_id, name, description) VALUES
   (9, '멕시칸', '타코, 브리또, 퀘사디아 등');
 
 -- 3) FoodCategoryCluster 매핑 (cluster_id, food_category_id 모두 +1)
-INSERT IGNORE INTO food_category_cluster (cluster_id, food_category_id) VALUES
+INSERT INTO food_category_cluster (cluster_id, food_category_id) VALUES
   (1,1),(3,1),(4,1),(6,1),
   (1,2),(2,2),(3,2),(6,2),
   (1,3),(4,3),(5,3),(7,3),
@@ -40,7 +40,7 @@ INSERT IGNORE INTO food_category_cluster (cluster_id, food_category_id) VALUES
   (1,9),(4,9),(5,9),(7,9);
 
 -- 4) Spot 마스터 데이터 (spot_id 모두 +1)
-INSERT IGNORE INTO spot (spot_id, name, address, latitude, longitude) VALUES
+INSERT INTO spot (spot_id, name, address, latitude, longitude) VALUES
   (1,  '서서울톨게이트,(서울방향)졸음쉼터 내',       '경기도 안산시 상록구 장하동 산 8-1,서서울톨게이트 서울방향',             37.35664272, 126.8648238),
   (2,  '힐스테이트',                             '경기도 이천시 갈산동 781',                                           37.2838729248, 127.4557460937),
   (3,  '삼성래미안아파트',                         '경기도 안양시 만안구 안양동 90-1번지 삼성래미안아파트',              37.4030329769, 126.9226856892),
