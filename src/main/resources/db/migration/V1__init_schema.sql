@@ -80,14 +80,6 @@ CREATE TABLE IF NOT EXISTS recommendation_request_cluster (
     FOREIGN KEY (cluster_id) REFERENCES cluster(cluster_id)
     );
 
--- ⑨ RecommendationRequestFood 테이블 (누락된 매핑)
-CREATE TABLE IF NOT EXISTS recommendation_request_food (
-                                                           id               BIGINT AUTO_INCREMENT PRIMARY KEY,
-                                                           request_id       BIGINT NOT NULL,
-                                                           food_category_id BIGINT NOT NULL,
-                                                           FOREIGN KEY (request_id)       REFERENCES recommendation_request(request_id),
-    FOREIGN KEY (food_category_id) REFERENCES food_category(food_category_id)
-    );
 
 -- ⑩ RecommendationSegment 테이블
 CREATE TABLE IF NOT EXISTS recommendation_segment (
