@@ -3,6 +3,8 @@ package com.dontgojunbao.bossoverhere.domain.recommendation.service;
 import com.dontgojunbao.bossoverhere.domain.recommendation.dao.FoodCategoryClusterRepository;
 import com.dontgojunbao.bossoverhere.domain.recommendation.dao.FoodCategoryRepository;
 import com.dontgojunbao.bossoverhere.domain.recommendation.domain.FoodCategory;
+import com.dontgojunbao.bossoverhere.domain.recommendation.domain.FoodCategoryCluster;
+import com.dontgojunbao.bossoverhere.domain.recommendation.dto.response.ClusterDetailResponse;
 import com.dontgojunbao.bossoverhere.domain.recommendation.dto.response.FoodCategoryDetailResponse;
 import com.dontgojunbao.bossoverhere.domain.recommendation.dto.response.FoodCategoryDto;
 import com.dontgojunbao.bossoverhere.domain.user.service.UserService;
@@ -12,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.dontgojunbao.bossoverhere.global.error.FoodCategoryErrorCode.NOTFOUND_FOOD_CATEGORY;
 
@@ -23,22 +26,26 @@ public class FoodCategoryService {
     private final FoodCategoryRepository categoryRepo;
     private final FoodCategoryClusterRepository mappingRepo;
 
-    public List<FoodCategoryDto> findAll(Long userId) {
+    public List<FoodCategoryDetailResponse> findAll(Long userId) {
         userService.getUserById(userId);
-        List<FoodCategory> cats = categoryRepo.findAll();
-        return cats.stream().map(cat -> {
-            List<Long> clusterIds = mappingRepo.findClusterIdsByCategoryId(cat.getId());
-            return new FoodCategoryDto(cat.getId(), cat.getName(), clusterIds);
-        }).toList();
+        // 2) 카테고리 전체 조회 후 DTO 매핑
+        return categoryRepo.findAll().stream()
+                .map(FoodCategoryDetailResponse::from)
+                .collect(Collectors.toList());
     }
 
-    public FoodCategoryDetailResponse findById(Long userId, Long categoryId) {
+    public List<ClusterDetailResponse> findClustersByCategory(Long userId, Long categoryId) {
         userService.getUserById(userId);
         FoodCategory cat = categoryRepo.findById(categoryId)
                 .orElseThrow(() -> new ApplicationException(NOTFOUND_FOOD_CATEGORY));
-        List<Long> clusterIds = mappingRepo.findClusterIdsByCategoryId(categoryId);
-        return new FoodCategoryDetailResponse(
-                cat.getId(), cat.getName(), cat.getDescription(), clusterIds
-        );
+        // 3) 매핑 테이블에서 클러스터 꺼내서 DTO로 매핑
+        return mappingRepo.findAllByFoodCategory_Id(categoryId).stream()
+                .map(FoodCategoryCluster::getCluster)
+                .map(ClusterDetailResponse::from)
+                .collect(Collectors.toList());
+    }
+    public FoodCategory getFoodCategoryById(Long categoryId) {
+        return categoryRepo.findById(categoryId)
+                .orElseThrow(() -> new ApplicationException(NOTFOUND_FOOD_CATEGORY));
     }
 }
