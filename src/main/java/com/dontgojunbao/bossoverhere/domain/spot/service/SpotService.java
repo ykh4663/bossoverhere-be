@@ -39,4 +39,11 @@ public class SpotService {
                 .orElseThrow(() -> new ApplicationException(SpotErrorCode.NOTFOUND_SPOT));
         return SpotDto.from(spot);
     }
+
+    public Spot getSpotById(Long spotId) {
+        return spotRepository.findById(spotId)
+                .orElseThrow(() -> new ApplicationException(SpotErrorCode.NOTFOUND_SPOT));
+    }
+
+
 }
