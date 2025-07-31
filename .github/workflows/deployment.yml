@@ -20,7 +20,6 @@ jobs:
       #  repository secrets에 올린 application.yml을 빌드 시 생성
       - name: Make application.yml
         run: |
-          mkdir ./src/main/resources 
           cd ./src/main/resources
           touch ./application.yml
           echo "${{ secrets.APPLICATION }}" > ./application.yml
