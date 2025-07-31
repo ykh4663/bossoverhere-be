@@ -1,37 +1,54 @@
 package com.dontgojunbao.bossoverhere.global.config;
 
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.servers.Server;
+
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
+
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
+@OpenAPIDefinition(
+        info = @io.swagger.v3.oas.annotations.info.Info(
+                title       = "BOSS OverHere Backend API",
+                version     = "1.0.0",
+                description = "API Description"
+        ),
+        servers = {
+                @Server(
+                        url         = "https://api.boh-server.p-e.kr",
+                        description = "Production"
+                )
+        }
+)
 public class SwaggerConfig {
+
     @Bean
     public OpenAPI openAPI() {
-        String jwt = "JWT";
-        SecurityRequirement securityRequirement = new SecurityRequirement().addList(jwt);
-        Components components = new Components().addSecuritySchemes(jwt, new SecurityScheme()
-                .name(jwt)
-                .type(SecurityScheme.Type.HTTP)
-                .scheme("bearer")
-                .bearerFormat("JWT")
-        );
+        String jwtScheme = "JWT";
+        SecurityRequirement securityReq = new SecurityRequirement().addList(jwtScheme);
+        Components components = new Components()
+                .addSecuritySchemes(jwtScheme, new SecurityScheme()
+                        .name(jwtScheme)
+                        .type(SecurityScheme.Type.HTTP)
+                        .scheme("bearer")
+                        .bearerFormat("JWT")
+                );
+
         return new OpenAPI()
-                .components(new Components())
-                .info(apiInfo())
-                .addSecurityItem(securityRequirement)
-                .components(components);
+                .components(components)
+                .addSecurityItem(securityReq)
+                // 모델용 Info 를 이용해 문서 정보 설정
+                .info(new Info()
+                        .title("BOSS OverHere Backend API")
+                        .description("API Description")
+                        .version("1.0.0")
+                );
     }
-
-    private Info apiInfo() {
-        return new Info()
-                .title("API Documentation") // API의 제목
-                .description("API Description") // API에 대한 설명
-                .version("1.0.0"); // API의 버전
-    }
-
 }
