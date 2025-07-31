@@ -25,7 +25,6 @@ jobs:
           ${{ secrets.APPLICATION_DEV_YML }}
           EOF
 
-      - uses: actions/checkout@v4
       - name: JDK 17 setting
         uses: actions/setup-java@v4
         with:
