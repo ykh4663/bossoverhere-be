@@ -45,7 +45,9 @@
 ## ERD
 
 ![ERD 다이어그램](images/feature2.png)
-원본은 아래 Lucidchart 링크를 참고하세요.  
+
+원본은 아래 Lucidchart 링크를 참고하세요.
+
 [🔗 ERD 다이어그램 (Lucidchart)](https://lucid.app/lucidchart/ed55f3fd-eaac-4638-9348-9ac9b374edb2/edit?invitationId=inv_cbed137e-9123-48b5-b972-f1ceffdb2590)
 
 ---
@@ -81,4 +83,5 @@
 ![시스템 아키텍쳐](images/feature3.png)
 
 원본은 아래 링크를 참고하세요.
+
 [🔗 시스템 아키텍쳐 (draw.io)](https://drive.google.com/file/d/1uYdEtw08h7nk301LgZtgRsZTPE2sWMhu/view?usp=sharing)
