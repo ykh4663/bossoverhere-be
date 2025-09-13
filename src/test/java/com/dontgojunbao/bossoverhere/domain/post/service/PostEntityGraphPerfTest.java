@@ -28,6 +28,7 @@ import java.util.concurrent.ThreadLocalRandom;
 import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest
 @ActiveProfiles("dev")
+
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class PostEntityGraphPerfTest {
 
