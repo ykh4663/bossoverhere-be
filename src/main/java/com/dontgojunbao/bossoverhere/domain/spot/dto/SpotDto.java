@@ -10,7 +10,9 @@ public class SpotDto {
     private Long spotId;
     private String spotName;
     private String spotAddress;
+    private double spotLatitude;
+    private double spotLongitude;
     public static SpotDto from(Spot s) {
-        return new SpotDto(s.getId(), s.getName(), s.getAddress());
+        return new SpotDto(s.getId(), s.getName(), s.getAddress(), s.getLatitude(), s.getLongitude());
     }
 }

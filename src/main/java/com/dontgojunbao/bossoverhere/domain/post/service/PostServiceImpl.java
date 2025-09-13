@@ -2,7 +2,8 @@ package com.dontgojunbao.bossoverhere.domain.post.service;
 
 import com.dontgojunbao.bossoverhere.domain.post.dao.PostRepository;
 import com.dontgojunbao.bossoverhere.domain.post.domain.Post;
-import com.dontgojunbao.bossoverhere.domain.post.dto.PostInfoDto;
+import com.dontgojunbao.bossoverhere.domain.post.dto.PostDto;
+import com.dontgojunbao.bossoverhere.domain.post.dto.PostSimpleDto;
 import com.dontgojunbao.bossoverhere.domain.post.dto.PostSaveDto;
 import com.dontgojunbao.bossoverhere.domain.post.dto.PostUpdateDto;
 import com.dontgojunbao.bossoverhere.domain.spot.domain.Spot;
@@ -64,16 +65,17 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
-    public PostInfoDto getPost(Long userId, Long postId) {
-        return new PostInfoDto(loadPostWithUserCheck(userId, postId));
+    public PostDto getPost(Long userId, Long postId) {
+        return new PostDto(loadPostWithUserCheck(userId, postId));
     }
 
     @Override
-    public Page<PostInfoDto> getPosts(Long userId, Pageable pageable) {
+    public Page<PostSimpleDto> getPosts(Long userId, Pageable pageable) {
         userService.getUserById(userId);  // 인증 확인
-        return postRepository.findAllPosts(pageable)
-                .map(PostInfoDto::new);
+        return postRepository.findAllPostsWithWriterAndSpot(pageable)
+                .map(PostSimpleDto::new);
     }
+
 
     @Override
     @Transactional

@@ -1,8 +1,9 @@
 package com.dontgojunbao.bossoverhere.domain.recommendation.controller;
 
+import com.dontgojunbao.bossoverhere.domain.recommendation.controller.docs.FoodCategoryControllerDocs;
 import com.dontgojunbao.bossoverhere.domain.recommendation.dto.response.ClusterDetailResponse;
 import com.dontgojunbao.bossoverhere.domain.recommendation.dto.response.FoodCategoryDetailResponse;
-import com.dontgojunbao.bossoverhere.domain.recommendation.dto.response.FoodCategoryDto;
+
 import com.dontgojunbao.bossoverhere.domain.recommendation.service.FoodCategoryService;
 import com.dontgojunbao.bossoverhere.global.common.dto.CommonResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -21,10 +22,10 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/food-categories")
 @RequiredArgsConstructor
-public class FoodCategoryController {
+public class FoodCategoryController implements FoodCategoryControllerDocs {
     private final FoodCategoryService foodCategoryService;
 
-    @Operation(summary = "모든 음식 카테고리 + 클러스터 ID 조회")
+
     @GetMapping
     public ResponseEntity<CommonResponse<List<FoodCategoryDetailResponse>>> getFoodCategories(
             @AuthenticationPrincipal Long userId
@@ -34,7 +35,7 @@ public class FoodCategoryController {
         );
     }
 
-    @Operation(summary = "카테고리별 클러스터 조회")
+
     @GetMapping("/{categoryId}/clusters")
     public ResponseEntity<CommonResponse<List<ClusterDetailResponse>>> getClustersByCategory(
             @AuthenticationPrincipal Long userId,
