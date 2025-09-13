@@ -1,5 +1,6 @@
 package com.dontgojunbao.bossoverhere.domain.post.controller;
 
+import com.dontgojunbao.bossoverhere.domain.post.controller.docs.PostControllerDocs;
 import com.dontgojunbao.bossoverhere.domain.post.dto.PostDto;
 import com.dontgojunbao.bossoverhere.domain.post.dto.PostSimpleDto;
 import com.dontgojunbao.bossoverhere.domain.post.dto.PostSaveDto;
@@ -22,11 +23,10 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/posts")
 @RequiredArgsConstructor
-public class PostController {
+public class PostController implements PostControllerDocs {
 
     private final PostService postService;
 
-    @Operation(summary = "게시글 생성", description = "새로운 게시글을 작성합니다.")
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<CommonResponse<Long>> createPost(
             @AuthenticationPrincipal Long userId,
@@ -38,7 +38,7 @@ public class PostController {
                 .body(CommonResponse.createSuccess(id));
     }
 
-    @Operation(summary = "단일 게시글 조회", description = "postId로 게시글 한 건을 조회합니다.")
+
     @GetMapping("/{postId}")
     public ResponseEntity<CommonResponse<PostDto>> getPost(
             @AuthenticationPrincipal Long userId,
@@ -48,7 +48,7 @@ public class PostController {
         return ResponseEntity.ok(CommonResponse.createSuccess(info));
     }
 
-    @Operation(summary = "전체 게시글 조회", description = "페이징된 게시글 목록을 조회합니다.")
+
     @GetMapping
     public ResponseEntity<CommonResponse<Page<PostSimpleDto>>> getPosts(
             @AuthenticationPrincipal Long userId,
@@ -58,7 +58,7 @@ public class PostController {
         return ResponseEntity.ok(CommonResponse.createSuccess(page));
     }
 
-    @Operation(summary = "게시글 수정", description = "postId에 해당하는 게시글을 수정합니다.")
+
     @PutMapping(value = "/{postId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<CommonResponse<Void>> updatePost(
             @AuthenticationPrincipal Long userId,
@@ -69,7 +69,7 @@ public class PostController {
         return ResponseEntity.ok(CommonResponse.createSuccess(null));
     }
 
-    @Operation(summary = "게시글 삭제", description = "postId에 해당하는 게시글을 삭제합니다.")
+
     @DeleteMapping("/{postId}")
     public ResponseEntity<CommonResponse<Void>> deletePost(
             @AuthenticationPrincipal Long userId,

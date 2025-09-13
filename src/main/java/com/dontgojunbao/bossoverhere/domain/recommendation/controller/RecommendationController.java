@@ -1,5 +1,6 @@
 package com.dontgojunbao.bossoverhere.domain.recommendation.controller;
 
+import com.dontgojunbao.bossoverhere.domain.recommendation.controller.docs.RecommendationControllerDocs;
 import com.dontgojunbao.bossoverhere.domain.recommendation.dto.request.RecommendationRequestDto;
 import com.dontgojunbao.bossoverhere.domain.recommendation.dto.response.RecommendationDetailDto;
 import com.dontgojunbao.bossoverhere.domain.recommendation.dto.response.RecommendationResponse;
@@ -24,12 +25,9 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/recommendations")
 @RequiredArgsConstructor
-public class RecommendationController {
+public class RecommendationController implements RecommendationControllerDocs {
     private final RecommendationService recommendationService;
-    @Operation(
-            summary = "추천 요청",
-            description = "문항, 스팟, 날짜·시간을 전달하면 AI 추천 플랜 리스트를 반환합니다."
-    )
+
     @PostMapping
     public ResponseEntity<CommonResponse<List<RecommendationResponse>>> recommend(
             @RequestBody @Valid RecommendationRequestDto dto,
@@ -41,8 +39,8 @@ public class RecommendationController {
                 .body(CommonResponse.createSuccess(plan));
     }
 
-    @Operation(summary = "내 추천 요청 내역 조회", description = "내가 만든 추천 요청 이력(페이징)")
-    @GetMapping("/history")
+
+    @GetMapping
     public ResponseEntity<CommonResponse<Page<RecommendationSimpleDto>>> getHistory(
             @AuthenticationPrincipal Long userId,
             @RequestParam(defaultValue = "0") int page,
@@ -55,7 +53,7 @@ public class RecommendationController {
         return ResponseEntity.ok(CommonResponse.createSuccess(result));
     }
 
-    @Operation(summary = "추천 이력 상세 조회", description = "단일 추천 이력과 선택한 클러스터, 구간 정보를 반환합니다.")
+
     @GetMapping("/{requestId}")
     public ResponseEntity<CommonResponse<RecommendationDetailDto>> getHistoryDetail(
             @AuthenticationPrincipal Long userId,

@@ -1,5 +1,6 @@
 package com.dontgojunbao.bossoverhere.domain.auth.controller;
 
+import com.dontgojunbao.bossoverhere.domain.auth.controller.docs.LogoutControllerDocs;
 import com.dontgojunbao.bossoverhere.domain.auth.service.LogoutService;
 import com.dontgojunbao.bossoverhere.global.common.dto.CommonResponse;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/logout")
-public class LogoutController {
+public class LogoutController implements LogoutControllerDocs {
 
 
     private final LogoutService logoutService;

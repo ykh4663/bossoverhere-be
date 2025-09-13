@@ -28,10 +28,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest(properties = {
-        // 쿼리 카운트/시간 측정을 위해 통계 활성화
-        "spring.jpa.properties.hibernate.generate_statistics=true"
-})
+@SpringBootTest
 @ActiveProfiles("dev")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class PostEntityGraphPerfTest {

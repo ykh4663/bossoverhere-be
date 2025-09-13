@@ -19,13 +19,13 @@ import org.springframework.context.annotation.Configuration;
                 title       = "BOSS OverHere Backend API",
                 version     = "1.0.0",
                 description = "API Description"
-        ),
-        servers = {
-                @Server(
-                        url         = "https://api.boh-server.p-e.kr",
-                        description = "Production"
-                )
-        }
+        )
+//        servers = {
+//                @Server(
+//                        url         = "https://api.boh-server.p-e.kr",
+//                        description = "Production"
+//                )
+//        }
 )
 public class SwaggerConfig {
 
