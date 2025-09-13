@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @Schema(description = "게시글 조회 응답")
-public class PostInfoDto {
+public class PostSimpleDto {
 
     @Schema(description = "게시글 ID", example = "1")
     private Long postId;
@@ -48,7 +48,7 @@ public class PostInfoDto {
     @Schema(description = "수정 일시 (YYYY-MM-DDThh:mm:ss)", example = "2025-07-30T18:30:00")
     private LocalDateTime updatedAt;
 
-    public PostInfoDto(Post post) {
+    public PostSimpleDto(Post post) {
         this.postId = post.getId();
         this.writerId = post.getWriter().getId();
         this.spotId = post.getSpot().getId();

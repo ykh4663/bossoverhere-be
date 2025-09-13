@@ -59,8 +59,12 @@ dependencies {
 	implementation 'io.jsonwebtoken:jjwt-impl:0.12.6'
 	implementation 'io.jsonwebtoken:jjwt-jackson:0.12.6'
 
+	implementation 'net.datafaker:datafaker:2.4.2'
 
+}
 
+tasks.withType(JavaCompile).configureEach {
+	options.compilerArgs.add("-parameters")
 }
 
 tasks.named('test') {
