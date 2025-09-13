@@ -2,7 +2,7 @@ package com.dontgojunbao.bossoverhere.domain.post.service;
 
 import com.dontgojunbao.bossoverhere.domain.post.dao.PostRepository;
 import com.dontgojunbao.bossoverhere.domain.post.domain.Post;
-import com.dontgojunbao.bossoverhere.domain.post.dto.PostInfoDto;
+import com.dontgojunbao.bossoverhere.domain.post.dto.PostSimpleDto;
 import com.dontgojunbao.bossoverhere.domain.post.dto.PostSaveDto;
 import com.dontgojunbao.bossoverhere.domain.post.dto.PostUpdateDto;
 import com.dontgojunbao.bossoverhere.domain.spot.domain.Spot;
@@ -169,13 +169,13 @@ class PostServiceTest {
                 .build();
 
         Page<Post> page = new PageImpl<>(List.of(p1, p2));
-        given(postRepository.findAllPosts(PageRequest.of(0,10))).willReturn(page);
+        given(postRepository.findAllPostsWithWriterAndSpot(PageRequest.of(0,10))).willReturn(page);
 
-        Page<PostInfoDto> result = postService.getPosts(userId, PageRequest.of(0,10));
+        Page<PostSimpleDto> result = postService.getPosts(userId, PageRequest.of(0,10));
 
         assertThat(result.getTotalElements()).isEqualTo(2);
         assertThat(result.getContent())
-                .extracting(PostInfoDto::getPostId)
+                .extracting(PostSimpleDto::getPostId)
                 .containsExactlyInAnyOrder(1L, 2L);
     }
 

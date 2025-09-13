@@ -1,6 +1,7 @@
 package com.dontgojunbao.bossoverhere.domain.post.controller;
 
-import com.dontgojunbao.bossoverhere.domain.post.dto.PostInfoDto;
+import com.dontgojunbao.bossoverhere.domain.post.dto.PostDto;
+import com.dontgojunbao.bossoverhere.domain.post.dto.PostSimpleDto;
 import com.dontgojunbao.bossoverhere.domain.post.dto.PostSaveDto;
 import com.dontgojunbao.bossoverhere.domain.post.dto.PostUpdateDto;
 import com.dontgojunbao.bossoverhere.domain.post.service.PostService;
@@ -39,21 +40,21 @@ public class PostController {
 
     @Operation(summary = "단일 게시글 조회", description = "postId로 게시글 한 건을 조회합니다.")
     @GetMapping("/{postId}")
-    public ResponseEntity<CommonResponse<PostInfoDto>> getPost(
+    public ResponseEntity<CommonResponse<PostDto>> getPost(
             @AuthenticationPrincipal Long userId,
             @PathVariable Long postId
     ) {
-        PostInfoDto info = postService.getPost(userId, postId);
+        PostDto info = postService.getPost(userId, postId);
         return ResponseEntity.ok(CommonResponse.createSuccess(info));
     }
 
     @Operation(summary = "전체 게시글 조회", description = "페이징된 게시글 목록을 조회합니다.")
     @GetMapping
-    public ResponseEntity<CommonResponse<Page<PostInfoDto>>> getPosts(
+    public ResponseEntity<CommonResponse<Page<PostSimpleDto>>> getPosts(
             @AuthenticationPrincipal Long userId,
             Pageable pageable
     ) {
-        Page<PostInfoDto> page = postService.getPosts(userId, pageable);
+        Page<PostSimpleDto> page = postService.getPosts(userId, pageable);
         return ResponseEntity.ok(CommonResponse.createSuccess(page));
     }
 

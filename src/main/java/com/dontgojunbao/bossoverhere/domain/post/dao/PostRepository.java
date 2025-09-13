@@ -8,7 +8,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 public interface PostRepository extends JpaRepository<Post,Long> {
-    @EntityGraph(attributePaths = {"writer", "spot"})
+
     @Query("select p from Post p")
     Page<Post> findAllPosts(Pageable pageable);
+
+
+    @EntityGraph(attributePaths = {"writer", "spot"})
+    @Query("select p from Post p")
+    Page<Post> findAllPostsWithWriterAndSpot(Pageable pageable);
 }
